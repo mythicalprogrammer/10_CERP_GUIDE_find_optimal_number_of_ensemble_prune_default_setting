@@ -19,8 +19,27 @@ rand_seed <- 1030
 
 set.seed(rand_seed)
 guide_cerp_predictions <- list()
+best_number_of_partitions <- 153
 
-best_number_of_partitions <- 291
+partitions <- create_CERP_partitions(
+  num_partition = best_number_of_partitions,
+  dataset = train_data ,
+  response = "state",
+  rand_seed = rand_seed
+)
+generate_GUIDE_files(
+  dataset = train_data,
+  cerp_partitions = partitions,
+  part_prefix_name = str_c('rand_seed_', rand_seed, '_part'),
+  response = "state",
+  rand_seed = rand_seed
+)
+create_CERP_GUIDE_forest(
+  guide_dir = "./guide_data/",
+  number_of_partitions = best_number_of_partitions,
+  prune = TRUE,
+  rand_seed = rand_seed
+)
 
 for (i in  1:nrow(test_data)) {
   # # predict here
